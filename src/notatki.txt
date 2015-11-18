@@ -1,0 +1,20 @@
+klasa Coordinates (int int jako współrzędne w tablicy węzłów)
+
+Link ma dwa koordynaty
+
+factory linkow - dostaje węzeł startowy i automatycznie tworzy linki do węzłów OD niego
+automatycznie zapewnia przeskoczenie linku na index 0 gdy koordynat ostatni w tablicy
+
+
+SYMULACJA:
+najkrótsza ścieżka - dijsktra
+przypadkowy - losuje wyjście w każdym węźle i sprawdza czy jest u celu
+najdłuższa ścieżka - ? hardkod
+
+
+każdy pakiet ma wstawiony czas wyjścia i czas dotarcia do celu i liczbę hopów. 
+Każdy pakiet ma w sobie ścieżkę którą ma pokonać ? jako kolejkę. 
+Albo liczone za każdym razem lub jakoś centralnie.
+
+czas dyskretny, w jednostce każdy pakiet który nie jest u celu przechodzi linkiem do kolejnego celu.
+M węzłów losowych generuje pakiet z losowym celem
