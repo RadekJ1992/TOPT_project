@@ -6,6 +6,37 @@
 
 public class Coordinates {
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((xCoord == null) ? 0 : xCoord.hashCode());
+        result = prime * result + ((yCoord == null) ? 0 : yCoord.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Coordinates other = (Coordinates) obj;
+        if (xCoord == null) {
+            if (other.xCoord != null)
+                return false;
+        } else if (!xCoord.equals(other.xCoord))
+            return false;
+        if (yCoord == null) {
+            if (other.yCoord != null)
+                return false;
+        } else if (!yCoord.equals(other.yCoord))
+            return false;
+        return true;
+    }
+
     private Integer xCoord;
     private Integer yCoord;
 

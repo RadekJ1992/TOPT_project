@@ -16,12 +16,25 @@ public class Packet {
     /**
      * Trasa pakietu.
      */
-    private List<Link> route;
+    private List<Node> route;
 
     /**
      * Time To Live pakietu.
      */
     private Integer ttl;
+    
+    /**
+     * Liczba hopów, jakie wykonał pakiet
+     */
+    private Integer hops = 0;
+
+    public void incrementHops() {
+        hops++;
+    }
+    
+    public Integer getHops() {
+        return hops;
+    }
 
     public Integer getId() {
         return id;
@@ -31,11 +44,11 @@ public class Packet {
         this.id = id;
     }
 
-    public List<Link> getRoute() {
+    public List<Node> getRoute() {
         return route;
     }
 
-    public void setRoute(List<Link> route) {
+    public void setRoute(List<Node> route) {
         this.route = route;
     }
 
