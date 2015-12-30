@@ -52,4 +52,12 @@ public class Node {
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Node: " + getCoordinates().getX() + " : " + getCoordinates().getY();
+    }
 }

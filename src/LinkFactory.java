@@ -26,10 +26,10 @@ public class LinkFactory {
         //Zakładamy że tablica jest kwadratowa
         Integer size = networkMesh.length;
         
-        boolean linkRight = nodeX % 2 == 0;
-        boolean linkUp = nodeY % 2 == 0;
+        boolean linkRight = nodeY % 2 == 0;
+        boolean linkUp = nodeX % 2 == 0;
         
-        Link horizontalLink = new Link();
+        Link horizontalLink = new Link(networkMesh);
         if (linkRight) {
             horizontalLink.setStartCoordinates(
                     new Coordinates(nodeX, nodeY));
@@ -42,8 +42,9 @@ public class LinkFactory {
                     new Coordinates((((nodeX - 1) % size) + size) % size, nodeY));
         }
         networkMesh[nodeX][nodeY].getLinkList().add(horizontalLink);
+//        System.out.println("Generating link " + horizontalLink.toString());
 
-        Link verticalLink = new Link();
+        Link verticalLink = new Link(networkMesh);
         if (linkUp) {
             verticalLink.setStartCoordinates(
                     new Coordinates(nodeX, nodeY));
@@ -56,5 +57,6 @@ public class LinkFactory {
                     new Coordinates(nodeX, (((nodeY + 1) % size) + size) % size));
         }
         networkMesh[nodeX][nodeY].getLinkList().add(verticalLink);
+//        System.out.println("Generating link " + verticalLink.toString());
     }
 }

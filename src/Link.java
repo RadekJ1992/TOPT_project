@@ -8,9 +8,15 @@ public class Link {
     private Integer startNodeId;
     private Integer endNodeId;
     
+    private Node[][] networkMesh;
+    
     private Coordinates startCoordinates;
     private Coordinates endCoordinates;
 
+    public Link(Node[][] networkMesh) {
+        this.networkMesh = networkMesh;
+    }
+    
     public Integer getEndNodeId() {
         return endNodeId;
     }
@@ -41,5 +47,29 @@ public class Link {
 
     public void setEndCoordinates(Coordinates endCoordinates) {
         this.endCoordinates = endCoordinates;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Link: " + startCoordinates.toString() + " -> " + endCoordinates.toString();
+    }
+    /*
+     * 
+     * Metody na potrzeby dijkstry
+     * 
+     */
+    public Node getDestination() {
+        return networkMesh[endCoordinates.getX()][endCoordinates.getY()];
+      }
+
+    public Node getSource() {
+        return networkMesh[startCoordinates.getX()][startCoordinates.getY()];
+    }
+    
+    public Integer getWeight() {
+        return 100;
     }
 }

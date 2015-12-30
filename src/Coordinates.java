@@ -29,5 +29,13 @@ public class Coordinates {
     public void setY(Integer y) {
         this.yCoord = y;
     }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Coordinate: " + xCoord + " : " + yCoord;
+    }
 
 }
