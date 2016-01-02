@@ -2,8 +2,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.RefineryUtilities;
 
-public class Main {
+public class Main{
 
     public static void main(String[] args) throws IOException {
         
@@ -125,26 +128,123 @@ public class Main {
         Settings.setGeneratedPacketsStep(step);
         System.out.println("Krok, z jakim zmienia się ilość generowanych pakietów to: " + step);
         
+        System.out.println("Wybierz algorytm routingu:");
+        System.out.println("(1) Najkrótsza ścieżka (Dijkstra)");
+        System.out.println("(2) Najdłuższa ścieżka");
+        System.out.println("(3) Losowa ścieżka");
+        
+        String chosenAlgorithm = bufferRead.readLine();
+        
+        boolean algorithmChosen = false;
+        while (!algorithmChosen) {            
+            switch (chosenAlgorithm) {
+            case "1":
+                Settings.setCurrentAlgorithm(Settings.DIJKSTRA);
+                algorithmChosen = true;
+                break;
+            case "2":
+                Settings.setCurrentAlgorithm(Settings.LONGEST);
+                algorithmChosen = true;
+                break;
+            case "3":
+                Settings.setCurrentAlgorithm(Settings.RANDOM);
+                algorithmChosen = true;
+                break;
+            default:
+                System.out.println("Wybierz algorytm (wpisz 1, 2 lub 3)");
+                chosenAlgorithm = bufferRead.readLine();
+                break;
+            }
+        }
+        
         Network network = new Network();
-        network.generateNetwork(Settings.getNetworkSize());//DO WATKOW???
+        network.generateNetwork(Settings.getNetworkSize());
+        
+        final XYSeries deliveredPacketsSeries = new XYSeries("Pakiety");
+        final XYSeries averageHopsSeries = new XYSeries("hopy");
+        final XYSeries delaySeries = new XYSeries("opóźnienie");
+        final XYSeries delayVarianceSeries = new XYSeries("wariancja opóźnienia");
+        final XYSeries lostPacketsSeries = new XYSeries("utracone");
         //Iterujemy po ilości generowanych pakietów
         for (int generatedPackets = Settings.getGeneratedPacketsFrom(); 
                 generatedPackets <= Settings.getGeneratedPacketsTo(); 
                 generatedPackets += Settings.getGeneratedPacketsStep()) {
-            System.out.println("Testing " + generatedPackets + " packets per one time unit");
+            System.out.println("Symuluję generowanie " + generatedPackets + " pakietów w jednostce czasu");
             //Robimy 500 "jednostek czasu"
-            String[] elements = {"////", "||||", "\\\\\\\\", "||||"};
+          //  String[] elements = {"////", "||||", "\\\\\\\\", "||||"};
             for (int i = 0; i< 500; i++) {
                 network.generatePackets(generatedPackets);
                 network.transferPackets();
-                System.out.print(elements[i%4] + "\r");
+               // System.out.print(elements[i%4] + "\r");
             }
             System.out.println();
             System.out.println(generatedPackets + " packets per one time unit result:");
-            System.out.println("Delivered Packets: " + network.getDeliveredPackets());
-            System.out.println("Average Hops: " + network.getAverageHops());
-            System.out.println("Delay variance: " + network.getDelayVariance());
-            System.out.println("Lost Packets: " + network.getLostPackets());
-        }
+            System.out.println("Dostarczone Pakiety: " + network.getDeliveredPackets());
+            deliveredPacketsSeries.add(generatedPackets, network.getDeliveredPackets());
+            System.out.println("Średnia ilość przeskoków między węzłami: " + network.getAverageHops());
+            averageHopsSeries.add(generatedPackets, network.getAverageHops());
+            System.out.println("Średnie opóźnienie pakietu: " + network.getAverageDelay());
+            delaySeries.add(generatedPackets, network.getAverageDelay());
+            System.out.println("Wariancja opóźnienia: " + network.getDelayVariance());
+            delayVarianceSeries.add(generatedPackets, network.getDelayVariance());
+            System.out.println("Utracone pakiety: " + network.getLostPackets());
+            lostPacketsSeries.add(generatedPackets, network.getLostPackets());
+            }
+        
+        final XYSeriesCollection deliveredDataset = new XYSeriesCollection();
+        deliveredDataset.addSeries(deliveredPacketsSeries);
+        final SummaryChart deliveredChart = new SummaryChart("Ilość dostarczonych pakietów", 
+                deliveredDataset,
+                "Dostarczone pakiety",
+                "Ilość pakietów generowanych w jednej jednostce czasu",
+                "Dostarczone pakiety");
+        deliveredChart.pack();
+        RefineryUtilities.centerFrameOnScreen(deliveredChart);
+        deliveredChart.setVisible(true);
+        
+        final XYSeriesCollection averageHopsDataset = new XYSeriesCollection();
+        averageHopsDataset.addSeries(averageHopsSeries);
+        final SummaryChart hopsChart = new SummaryChart("Średnia ilość przeskoków między węzłami", 
+                averageHopsDataset,
+                "Ilość przeskoków",
+                "Ilość pakietów generowanych w jednej jednostce czasu",
+                "Ilość przeskoków");
+        hopsChart.pack();
+        RefineryUtilities.centerFrameOnScreen(hopsChart);
+        hopsChart.setVisible(true);
+        
+        final XYSeriesCollection averageDelayDataset = new XYSeriesCollection();
+        averageDelayDataset.addSeries(delaySeries);
+        final SummaryChart delayChart = new SummaryChart("Średnie opóźnienie pakietu", 
+                averageDelayDataset,
+                "Opóźnienie",
+                "Ilość pakietów generowanych w jednej jednostce czasu",
+                "Opóźnienie");
+        delayChart.pack();
+        RefineryUtilities.centerFrameOnScreen(delayChart);
+        delayChart.setVisible(true);
+        
+        final XYSeriesCollection averageDelayVarianceDataset = new XYSeriesCollection();
+        averageDelayVarianceDataset.addSeries(delayVarianceSeries);
+        final SummaryChart delayVarianceChart = new SummaryChart("Wariancja opóźnienia pakietów", 
+                averageDelayVarianceDataset,
+                "Wariancja opóźnienia",
+                "Ilość pakietów generowanych w jednej jednostce czasu",
+                "Wariancja opóźnienia");
+        delayVarianceChart.pack();
+        RefineryUtilities.centerFrameOnScreen(delayVarianceChart);
+        delayVarianceChart.setVisible(true);
+        
+        final XYSeriesCollection lostPacketsDataset = new XYSeriesCollection();
+        lostPacketsDataset.addSeries(lostPacketsSeries);
+        final SummaryChart lostChart = new SummaryChart("Utracone pakiety", 
+                lostPacketsDataset,
+                "Ilość utraconych pakietów",
+                "Ilość pakietów generowanych w jednej jednostce czasu",
+                "Utracone pakiety");
+        lostChart.pack();
+        RefineryUtilities.centerFrameOnScreen(lostChart);
+        lostChart.setVisible(true);
+        
     }
 }
