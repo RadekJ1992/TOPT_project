@@ -11,7 +11,62 @@ public class Settings {
     public final static String LONGEST = "LONGEST";
     public final static String RANDOM = "RANDOM";
     
-    //TODO POBRAC Z USTAWIEN;
+    private static Integer bufferSize = 10;
+    private static Integer ttl = 10;
+    private static Integer maxHop = 10;
+    private static Integer generatedPacketsFrom = 30;
+    private static Integer generatedPacketsTo = 100;
+    private static Integer generatedPacketsStep = 5;
+    private static Integer networkSize = 10;
+    
+    public static Integer getMaxHop() {
+        return maxHop;
+    }
+
+    public static void setMaxHop(Integer maxHop) {
+        Settings.maxHop = maxHop;
+    }
+
+    public static Integer getGeneratedPacketsFrom() {
+        return generatedPacketsFrom;
+    }
+
+    public static void setGeneratedPacketsFrom(Integer generatedPacketsFrom) {
+        Settings.generatedPacketsFrom = generatedPacketsFrom;
+    }
+
+    public static Integer getGeneratedPacketsTo() {
+        return generatedPacketsTo;
+    }
+
+    public static void setGeneratedPacketsTo(Integer generatedPacketsTo) {
+        Settings.generatedPacketsTo = generatedPacketsTo;
+    }
+
+    public static Integer getGeneratedPacketsStep() {
+        return generatedPacketsStep;
+    }
+
+    public static void setGeneratedPacketsStep(Integer generatedPacketsStep) {
+        Settings.generatedPacketsStep = generatedPacketsStep;
+    }
+
+    public static Integer getNetworkSize() {
+        return networkSize;
+    }
+
+    public static void setNetworkSize(Integer networkSize) {
+        Settings.networkSize = networkSize;
+    }
+
+    public static void setBufferSize(Integer bufferSize) {
+        Settings.bufferSize = bufferSize;
+    }
+
+    public static void setTtl(Integer ttl) {
+        Settings.ttl = ttl;
+    }
+
     private static String currentAlgorithm = DIJKSTRA;
 
     public static String getCurrentAlgorithm() {
@@ -19,13 +74,11 @@ public class Settings {
     }
     
     public static Integer getBufferSize() {
-        //TODO implementacja
-        return 10;
+        return bufferSize;
     }
     
     public static Integer getTtl() {
-        //TODO implementacja
-        return 10;
+        return Settings.ttl;
     }
     
     public static List<Node> getPathByCurrentAlgorithm(Node[][] networkMesh, Node source, Node target) {

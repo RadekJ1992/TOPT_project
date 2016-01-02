@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -10,6 +11,8 @@ public class Network {
     private Integer deliveredPackets = 0;
     private Integer hopsSum = 0;
     private Integer lostPackets = 0;
+    private Integer delaySum = 0;
+    private ArrayList<Integer> delayList;
 
     public Integer getDeliveredPackets() {
         return deliveredPackets;
@@ -17,6 +20,10 @@ public class Network {
 
     public Integer getHopsSum() {
         return hopsSum;
+    }
+    
+    public Integer getDelaySum() {
+        return delaySum;
     }
 
     public Integer getLostPackets() {
@@ -37,6 +44,11 @@ public class Network {
                 LinkFactory.getInstance().generateLinkForNode(networkMesh, i, j);
             }
         }
+        delaySum = 0;
+        delayList = new ArrayList<Integer>();
+        hopsSum = 0;
+        lostPackets = 0;
+        deliveredPackets = 0;
         return networkMesh;
     }
     
@@ -50,6 +62,7 @@ public class Network {
                 endNode = networkMesh[r.nextInt(size)][r.nextInt(size)];
             }
             Packet p = new Packet();
+          //  System.out.print("Calculating path for packet" + i + "\r");
             p.setRoute(Settings.getPathByCurrentAlgorithm(networkMesh, startNode, endNode));
             p.setTtl(Settings.getTtl());
             //usuwamy pierwszy węzeł ze ścieżki bo to węzeł startowy
@@ -59,6 +72,7 @@ public class Network {
                 lostPackets++;
             }
         }
+      //  System.out.println();
     }
     
     /**
@@ -71,21 +85,47 @@ public class Network {
                 Node node = networkMesh[i][j];
                 Packet p = node.getPacketFromBuffer();
                 if (p != null) {
-                    if (p.getRoute().size() > 1) {
-                        Node target = p.getRoute().get(0);
-                        p.setRoute(p.getRoute().subList(1, p.getRoute().size()));
-                        if (!target.putPacket(p)) {
-                            lostPackets++;
-                        } else {
-                            p.incrementHops();
-                        }
+                    if (p.getDelay() > Settings.getTtl()) {
+                        lostPackets++;
                     } else {
-                        //dostarczono
-                        deliveredPackets++;
-                        hopsSum += p.getHops();
+                        p.incrementDelay();
+                        if (p.getRoute().size() > 1) {
+                            Node target = p.getRoute().get(0);
+                            p.setRoute(p.getRoute().subList(1, p.getRoute().size()));
+                            if (!target.putPacket(p)) {
+                                lostPackets++;
+                            } else {
+                                p.incrementHops();
+                            }
+                        } else {
+                            //dostarczono
+                            deliveredPackets++;
+                            delayList.add(p.getDelay());
+                            delaySum += p.getDelay();
+                            hopsSum += p.getHops();
+                        }
                     }
                 }
             }
         }
+    }
+    
+    public Double getAverageDelay() {
+        return (double) (getDeliveredPackets() != 0 ? getDelaySum() / getDeliveredPackets() : 0);
+    }
+    
+    public Double getAverageHops() {
+        return (double) (getDeliveredPackets() != 0 ? getHopsSum() / getDeliveredPackets() : 0);
+    }
+    
+    public Double getDelayVariance() {
+        if (getDeliveredPackets() != 0) {
+            Double sum = 0d;
+            for (Integer i : delayList) {
+                sum += Math.pow((i - getAverageDelay()), 2) ;
+            }
+            return Math.sqrt((sum) / getDeliveredPackets());
+        }
+        return 0d;
     }
 }

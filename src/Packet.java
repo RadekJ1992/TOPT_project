@@ -23,11 +23,21 @@ public class Packet {
      */
     private Integer ttl;
     
+    private Integer delay = 0;
+    
     /**
      * Liczba hopów, jakie wykonał pakiet
      */
     private Integer hops = 0;
 
+    public Integer getDelay() {
+        return delay;
+    }
+    
+    public void incrementDelay() {
+        delay++;
+    }
+    
     public void incrementHops() {
         hops++;
     }
