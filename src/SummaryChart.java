@@ -1,5 +1,7 @@
 import java.awt.Color;
 
+import javax.swing.JFrame;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -16,7 +18,7 @@ import org.jfree.ui.ApplicationFrame;
  * @author Radoslaw Jarzynka
  */
 
-public class SummaryChart extends ApplicationFrame {
+public class SummaryChart extends JFrame {
 
     private static final long serialVersionUID = 8110644018324237851L;
 
@@ -28,7 +30,6 @@ public class SummaryChart extends ApplicationFrame {
         final ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
         setContentPane(chartPanel);
-
     }
 
     private JFreeChart createChart(final XYDataset dataset, String chartTitle, String xAxisLabel, String yAxisLabel) {
@@ -47,7 +48,6 @@ public class SummaryChart extends ApplicationFrame {
 
         // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
         chart.setBackgroundPaint(Color.lightGray);
-
 //        final StandardLegend legend = (StandardLegend) chart.getLegend();
   //      legend.setDisplaySeriesShapes(true);
         
