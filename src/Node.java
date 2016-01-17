@@ -35,6 +35,10 @@ public class Node {
     public Packet getPacketFromBuffer() {
         return buffer.poll();
     }
+    
+    public Queue<Packet> getBuffer() {
+        return buffer;
+    }
 
     @Override
     public int hashCode() {

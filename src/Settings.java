@@ -12,10 +12,11 @@ public class Settings {
     public final static String RANDOM = "RANDOM";
     private static Integer currentMode = 1;
     private static Integer testedTimeUnits = 500;
-    private static Integer networkSize = 10;
+    private static Integer networkSize = 7;
     private static Integer bufferSize = 10;
     private static Integer ttl = 10;
-    private static Integer generatedPackets = 50;
+    private static Integer generatedPackets = 2;
+    private static boolean isPerOneNode = true;
     
     //TRYB 1 - sprawdzamy ilość generowanych pakietów:
     public final static Integer PACKETS_MODE = 1;
@@ -180,5 +181,19 @@ public class Settings {
 
     public static void setCurrentMode(Integer currentMode) {
         Settings.currentMode = currentMode;
+    }
+
+    /**
+     * @return the isPerOneNode
+     */
+    public static boolean isPerOneNode() {
+        return isPerOneNode;
+    }
+
+    /**
+     * @param isPerOneNode the isPerOneNode to set
+     */
+    public static void setPerOneNode(boolean isPerOneNode) {
+        Settings.isPerOneNode = isPerOneNode;
     }
 }

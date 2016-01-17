@@ -10,7 +10,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
-import org.jfree.ui.ApplicationFrame;
 
 /**
  * created on 14:00:48 2 sty 2016 by Radoslaw Jarzynka
@@ -48,13 +47,9 @@ public class SummaryChart extends JFrame {
 
         // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
         chart.setBackgroundPaint(Color.lightGray);
-//        final StandardLegend legend = (StandardLegend) chart.getLegend();
-  //      legend.setDisplaySeriesShapes(true);
-        
         // get a reference to the plot for further customisation...
         final XYPlot plot = chart.getXYPlot();
         plot.setBackgroundPaint(Color.white);
-    //    plot.setAxisOffset(new Spacer(Spacer.ABSOLUTE, 5.0, 5.0, 5.0, 5.0));
         plot.setDomainGridlinePaint(Color.lightGray);
         plot.setRangeGridlinePaint(Color.lightGray);
         

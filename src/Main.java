@@ -1,3 +1,4 @@
+import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,8 +8,24 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.RefineryUtilities;
 
 public class Main{
+    
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    MainWindow window = new MainWindow();
+                    window.getFrame().setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-    public static void main(String[] args) throws IOException {
+    public static void mainOld(String[] args) throws IOException {
         
         BufferedReader bufferRead = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Witamy w symulatorze sieci o topologii Manhattan");
@@ -77,12 +94,12 @@ public class Main{
         
         System.out.println("Podaj rozmiar bufora w węźle:");
         String bufferSizeString = bufferRead.readLine();
-        Integer bufferSize = 0;
-        while (bufferSize == 0) {
+        Integer bufferSize = -1;
+        while (bufferSize == -1) {
             try {
                 bufferSize = Integer.valueOf(bufferSizeString);
-                if (bufferSize <= 0) {
-                    bufferSize = 0;
+                if (bufferSize <= -1) {
+                    bufferSize = -1;
                     System.out.println("Wprowadź wartość większą od 0");
                     bufferSizeString = bufferRead.readLine();
                 }
@@ -90,6 +107,9 @@ public class Main{
                 System.out.println("Wprowadź poprawną liczbę większą od 0");
                 bufferSizeString = bufferRead.readLine();
             }
+        }
+        if (bufferSize == 0) {
+            bufferSize = 1;
         }
         Settings.setBufferSize(bufferSize);
         System.out.println("Rozmiar bufora: " + bufferSize);
@@ -213,8 +233,8 @@ public class Main{
                 generatedPackets += Settings.getGeneratedPacketsStep()) {
             System.out.println("Symuluję generowanie " + generatedPackets + " pakietów w jednostce czasu");
             for (int i = 0; i< Settings.getTestedTimeUnits(); i++) {
-                network.generatePackets(generatedPackets);
-                network.transferPackets();
+                network.generatePackets(generatedPackets, true);
+                network.transferPackets(false);
             }
             System.out.println();
             System.out.println("Sprawdzanie generowania " + generatedPackets + " pakietów w jednostce czasu:");
@@ -380,17 +400,20 @@ public class Main{
                 minString = bufferRead.readLine();
             }
         }
+        if (min == 0) {
+            min = 1;
+        }
         Settings.setBufferSizeFrom(min);
         System.out.println("Minimalna wielkość bufora: " + min);
         
         System.out.println("Podaj maksymalną wielkość bufora:");
         String maxString = bufferRead.readLine();
-        Integer max = 0;
-        while (max == 0) {
+        Integer max = -1;
+        while (max == -1) {
             try {
                 max = Integer.valueOf(maxString);
-                if (max <= 0 || max < Settings.getBufferSizeFrom()) {
-                    max = 0;
+                if (max <= -1 || max < Settings.getBufferSizeFrom()) {
+                    max = -1;
                     System.out.println("Wprowadź wartość większą od " + Settings.getBufferSizeFrom());
                     maxString = bufferRead.readLine();
                 }
@@ -465,8 +488,8 @@ public class Main{
             Network network = new Network();
             network.generateNetwork(Settings.getNetworkSize());
             for (int i = 0; i< Settings.getTestedTimeUnits(); i++) {
-                network.generatePackets(generatedPackets);
-                network.transferPackets();
+                network.generatePackets(generatedPackets, true);
+                network.transferPackets(false);
             }
             System.out.println("Dostarczone Pakiety: " + network.getDeliveredPackets());
             deliveredPacketsSeries.add(bufferSize, network.getDeliveredPackets());
@@ -597,12 +620,12 @@ public class Main{
         
         System.out.println("Podaj rozmiar bufora w węźle:");
         String bufferSizeString = bufferRead.readLine();
-        Integer bufferSize = 0;
-        while (bufferSize == 0) {
+        Integer bufferSize = -1;
+        while (bufferSize == -1) {
             try {
                 bufferSize = Integer.valueOf(bufferSizeString);
-                if (bufferSize <= 0) {
-                    bufferSize = 0;
+                if (bufferSize < 0) {
+                    bufferSize = -1;
                     System.out.println("Wprowadź wartość większą od 0");
                     bufferSizeString = bufferRead.readLine();
                 }
@@ -610,6 +633,9 @@ public class Main{
                 System.out.println("Wprowadź poprawną liczbę większą od 0");
                 bufferSizeString = bufferRead.readLine();
             }
+        }
+        if (bufferSize == 0) {
+            bufferSize = 1;
         }
         Settings.setBufferSize(bufferSize);
         System.out.println("Rozmiar bufora: " + bufferSize);
@@ -715,8 +741,8 @@ public class Main{
             Network network = new Network();
             network.generateNetwork(Settings.getNetworkSize());
             for (int i = 0; i< Settings.getTestedTimeUnits(); i++) {
-                network.generatePackets(generatedPackets);
-                network.transferPackets();
+                network.generatePackets(generatedPackets, true);
+                network.transferPackets(false);
             }
             System.out.println("Dostarczone Pakiety: " + network.getDeliveredPackets());
             deliveredPacketsSeries.add(ttl, network.getDeliveredPackets());
